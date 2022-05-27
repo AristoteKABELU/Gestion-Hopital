@@ -1,3 +1,5 @@
+import datetime
+
 def enregistrer_un_docteur(nom_docteur, postnom_docteur, prenom_docteur,
                             telephone_docteur, matricule, specialisation ):
 
@@ -6,23 +8,10 @@ def enregistrer_un_docteur(nom_docteur, postnom_docteur, prenom_docteur,
     docteur = [nom_docteur, postnom_docteur, prenom_docteur, telephone_docteur, matricule, specialisation]
 
     return docteur 
-
-
-def enregistrer_horaire_docteur(liste):
-
-    """ Enregistrement de l'horaire de chaque docteur """
-
-    jours = ["lundi", "Mardi", 
-            "Mercredi", "Jeudi",
-            "Vendredi", "Samedi",
-            "Dimanche"]
-
-    for docteur in liste:
-        horaire = [] # Horaire de chaque docteur
-        print(f"\t Enregistrement pour le Dr {docteur[0]}!")
-
-        for jour in jours:
-            reponse = input(f"Etes-vous occupé {jour}?: ")
-            if reponse.lower() == "oui": horaire.append(jour)
-                
-        docteur.append(horaire)
+    
+def generation_matricule(liste_docteur, nom_docteur, postnom):
+    numero = len(liste_docteur) + 1
+    numero = str(numero).zfill(3)
+    year = str(datetime.datetime.now().year)
+    matricule = year[:2] + nom_docteur[0] + postnom[0] + numero
+    return matricule

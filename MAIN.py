@@ -1,6 +1,5 @@
 from Docteur import *
 from Patient import *
-from Gestion import *
 
 print("Bienvenue dans le menu!")
 liste_patients = []
@@ -38,7 +37,7 @@ def main():
                 postnom_docteur = (input("Entrez le postnom du docteur: ")).upper()
                 prenom_docteur = (input("Entrez le pre-nom du docteur: ")).upper()
                 telephone_docteur = input("Entrez le numero de Telephone du docteur: ")
-                matricule = input("Entrez le matricule du Docteur: ")
+                matricule = generation_matricule(liste_docteurs, nom_docteur, postnom_docteur)
                 specialisation = (input("Entrez la specialisiation du docteur: ")).capitalize()
                 nouveau_docteur = (enregistrer_un_docteur(
                                                         nom_docteur, postnom_docteur,
@@ -49,7 +48,7 @@ def main():
                 nbt = 0
                 if liste_docteurs:
                     for i in range(len(liste_docteurs)):
-                        if nouveauDocteur[:5] == liste_docteurs[i][:5]:
+                        if nouveau_docteur[:5] == liste_docteurs[i][:5]:
                             print("Le docteur existe deja! ")
                             nbt += 1
 
@@ -77,41 +76,107 @@ def main():
                 nbt = 0
                 if liste_patients:
                     for i in range(len(liste_patients)):
-                        if nouveauPatient[:8] == liste_patients[i][:8]:
+                        if nouveau_patient[:8] == liste_patients[i][:8]:
                             print("Le patient existe deja! ")
                             nbt += 1
                 # Si le patient n'existe pas
                 if nbt == 0:
                     liste_patients.append(nouveau_patient)
 
-
-            case 3:       #Chercher un patient
+            case 3:        # Chercher un patient
                 if not liste_patients:
                     print("Operation pas encore disponible !")
                 else:
                     nom = (input("Entrez le nom du patient que vous cherchez: ")).upper()
-                    chercher_un_patient(liste_patients, nom)
+                    nbt = 0 # nombre trouve
+                    for patient in liste_patients:
+                        if (nom in patient[0] 
+                            or nom in patient[1] 
+                            or nom in patient[2]):
+
+                            print(f"\
+                                    Nom           : {patient[0]} \n \
+                                    Post-nom      : {patient[1]} \n \
+                                    Prenom        : {patient[2]} \n \
+                                    Telephone     : {patient[3]} \n \
+                                    Poid          : {patient[4]} kg \n \
+                                    Taille        : {patient[5]} m \n \
+                                    Genre         : {patient[6]} \n \
+                                    Age           : {patient[7]} ans \n \
+                                    Numero Dossier: {patient[8]}  \n")
+
+                            nbt += 1
+                    if nbt == 0: print(f"{nom} non repertorié! ")            
 
             case 4:        # Chercher un patient a l'aide du Numero dossier
                 if not liste_patients:
                     print("Operation pas encore disponible !")
                 else:
                     numero = input("Entrez le numero de dossier du patient: ")
-                    chercher_un_patient_par_numero(numero, liste_patients)
+                    for patient in liste_patients:
+                        if numero == patient[-1]:
+                            print(f"\
+                                        Nom           : {patient[0]} \n \
+                                        Post-nom      : {patient[1]} \n \
+                                        Prenom        : {patient[2]} \n \
+                                        Telephone     : {patient[3]} \n \
+                                        Poid          : {patient[4]} kg \n \
+                                        Taille        : {patient[5]} m \n \
+                                        Genre         : {patient[6]} \n \
+                                        Age           : {patient[7]} ans \n \
+                                        Numero Dossier: {patient[8]}  \n \
+                                    ")
 
-            case 5:        #Afficher Tout les patients
+            case 5:        # Afficher Tout les patients
                 if not liste_patients:
                     print("Operation pas encore disponible !")
                 else:
-                    afficher_patients(liste_patients)
+                    for patient in liste_patients:
+                        if len(patient) == 9:
+                            # si le patient n'a pas de plainte
+                            print(f"\
+                         Nom           : {patient[0]} \n \
+                        Post-nom      : {patient[1]} \n \
+                        Prenom        : {patient[2]} \n \
+                        Telephone     : {patient[3]} \n \
+                        Poid          : {patient[4]} kg \n \
+                        Taille        : {patient[5]} m \n \
+                        Genre         : {patient[6]} \n \
+                        Age           : {patient[7]} ans \n \
+                        Numero Dossier: {patient[8]}  \n \
+                        ____________________________ \
+                    ")
+                        else:
+                            print(f"\
+                                        Nom           : {patient[0]} \n \
+                                        Post-nom      : {patient[1]} \n \
+                                        Prenom        : {patient[2]} \n \
+                                        Telephone     : {patient[3]} \n \
+                                        Poid          : {patient[4]} kg \n \
+                                        Taille        : {patient[5]} m \n \
+                                        Genre         : {patient[6]} \n \
+                                        Age           : {patient[7]} ans \n \
+                                        Plaintes      : {patient[8]} \n \
+                                        Numero Dossier: {patient[9]}  \n \
+                                        ____________________________ \
+                                    ")
 
-            case 6:        #Afficher tout les docteurs
+            case 6:        # Afficher tout les docteurs
                 if not liste_docteurs:
                     print("Operation pas encore disponible !")
                 else:
-                    afficher_docteurs(liste_docteurs)
+                    for docteur in liste_docteurs:
+                        print(f"\
+                     Nom            : {docteur[0]} \n \
+                    Post-nom       : {docteur[1]} \n \
+                    Prenom         : {docteur[2]} \n \
+                    Telephone      : {docteur[3]} \n \
+                    Matricule      : {docteur[4]} \n \
+                    Specialisation : {docteur[5]} \n \
+                    ____________________________ \
+                ")
 
-            case 7:        #Enregistrer plainte
+            case 7:        # Enregistrer plainte
                 if not liste_patients:
                     print("Operation pas encore disponible !")
 
@@ -128,24 +193,57 @@ def main():
                     if nbt == 0:
                         print(f"{nomPatient} non reconnu dans la liste!")
 
-            case 8:            #Afficher plainte a l'aide du Numero dossier
+            case 8:        # Afficher plainte a l'aide du Numero dossier
                 if not liste_patients:
                     print("Operation pas encore disponible !")
                 else:
                     numero_dossier = input("Entrez le numero dossier du patient: ")
-                    afficher_plainte_patient_via_numero(numero_dossier, liste_patients)
+                    for patient in liste_patients:
+                        if (numero_dossier == patient[-1] and
+                            len(patient) == 10):
 
-            case 9:            #Afficher l'IMC a l'aide du Numero dossier
+                            for plainte in patient[8]:
+                                print(f"{patient[0]} {patient[1]} {patient[2]} souffre de {plainte}")
+
+                        elif numero_dossier == patient[-1]:
+                            print(f"{patient[0]} {patient[1]} {patient[2]} n'a pas de plainte")
+
+            case 9:        # Afficher l'IMC a l'aide du Numero dossier
 
                 if not liste_patients:
                     print("Operation pas encore disponible !")
                 else:
                     numero_dossier = input("Entrez le numero de dossier: ")
                     nbt = 0         # Nombre trouvé
+                    
                     for patient in liste_patients:
-                        if numeroDossier in patient:
-                            afficher_IMC_avec_numero_dossier(numero_dossier, liste_patients)
-                            nbt += 1
+                        if numero_dossier == patient[-1]:
+
+                            #on essaie de caster nos valeurs
+                            try:
+                                poid_patient = float(patient[4])
+                                taille = float(patient[5])
+                            except TypeError:
+                                print("La taille ou le poid, n'est pas bien inscrit!")
+                                continue
+
+                            taille = taille ** 2
+                            imc = poid_patient / taille
+
+                            if imc < 18.5:
+                                print("Insuffisance normale")
+                            elif (imc >= 18.5) and (imc <= 25):
+                                print("Corpulence normale")
+                            elif (imc > 25) and (imc <=30):
+                                print("Surpoids")
+                            elif (imc > 30) and (imc <= 35):
+                                print("Obéisité modéréé ")
+                            elif (imc > 35) and (imc <= 40):
+                                print("Obésité sévère")
+                            else:
+                                print("Obésité ,orbite ou massive")
+
+                        nbt += 1
 
                     if nbt == 0:
                         print("Aucun dossier trouvé!")
@@ -154,24 +252,59 @@ def main():
                 if not liste_docteurs:
                     print("Operation pas encore disponible !")
                 else:
-                    enregistrer_horaire_docteur(liste_docteurs)
+                    jours = ["lundi", "Mardi", 
+                            "Mercredi", "Jeudi",
+                            "Vendredi", "Samedi",
+                            "Dimanche"]
+
+                for docteur in liste_docteurs:
+                    horaire = [] # Horaire de chaque docteur
+                    print(f"\t Enregistrement pour le Dr {docteur[0]}!")
+
+                    for jour in jours:
+                        reponse = input(f"Etes-vous occupé {jour}?: ")
+                        if reponse.lower() == "oui": horaire.append(jour)
+                            
+                    docteur.append(horaire)
 
             case 11:       # Vérifié la disponibilité d'un medecin
-                if not liste_docteurs:
-                    print("Operation pas encore disponible !")
-                else:
-                    nom_docteur = (input("Entrez le nom du medecin: ")).upper()
-                    verifie_disponibilite_docteur(nom_docteur, liste_docteurs)
+                        if not liste_docteurs:
+                            print("Operation pas encore disponible !")
+                        else:
+                            nom_docteur = (input("Entrez le nom du medecin: ")).upper()
+                            for docteur in liste_docteurs:
+                                if (nom_docteur == docteur[0]
+                                    or nom_docteur == docteur[1]
+                                    or nom_docteur == docteur[2]):
 
+                                        if len(docteur) < 7:
+                                            print("Horaire non etabli !")
 
-            case 12:       #Quitter le programme
+                                        else:
+                                            if len(docteur[-1] < 7):
+                                                print("Voici le jour qui ne sont pas disponible ")
 
-                print("Vos données ont été enregistré avec succès!")
+                                                for jour in docteur[-1]:
+                                                    print(f"{jour}", end=" ")
+
+                                                rdv = input("\n Veuillez prendre rendez-vous un jour qui n'est pas mentionné: ")
+                                                if rdv in docteur[-1]:
+                                                    print("Jour deja occupé")
+
+                                                elif rdv not in ["lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]:
+                                                    print(f"Désolé {rdv} n'est pas un jour de la semaine!")
+
+                                                else:    
+                                                    docteur[-1].append(rdv)
+
+                                            else:
+                                                print(f"Monsieur {docteur[0]} n'est pas disponible cette semaine!")
+                                else:
+                                    print(f"{nomocteur} n'est pas reconnu comme docteur!")
+
+            case 12:       # Quitter le programme
                 break
         
 main()
-
-
-# JE VIENS D'AJOUTER UN COMMENTAIRE ! ! ! !
 
 
