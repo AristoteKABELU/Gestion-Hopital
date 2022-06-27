@@ -33,13 +33,13 @@ def main():
             12: Quitter le programme \n \
                 ")
 
-        try:             # On se rassure que c'est un chiffre qui est tapé
+        try:               # On se rassure que c'est un chiffre qui est tapé
             choix = int(input(""))
         except ValueError:
             print("Veuillez entrer un chiffre Svp !!!")
             continue
         match choix:
-            case 1:   # Enregistrement d'un docteur
+            case 1:        # Enregistrement d'un docteur
 
                 nom_docteur = (input("Entrez le nom du Docteur: ")).upper()
                 postnom_docteur = (input("Entrez le postnom du docteur: ")).upper()
